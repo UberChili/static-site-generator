@@ -63,4 +63,4 @@ parse_to_html :: proc(data: []byte) -> cstring {
 }
 ``` 
 
-And then use it in another function:
+And then use it in another function, but this quickly seemed to me to be not ideal. So I thought instead to use a single function to get the html and to write to disk. It ended up being more or less like the following:

@@ -32,7 +32,7 @@ parse_to_html :: proc(data: []byte) -> cstring {
     return html
 }
 
-handle_file :: proc(filename: os.File_Info) {
+handle_file :: proc(filename: os.File_Info, directory: string) {
     if !os.exists(filename.fullpath) {
         fmt.eprintfln("File %v does not exist. Ignoring...", filename.fullpath)
         return
@@ -41,6 +41,27 @@ handle_file :: proc(filename: os.File_Info) {
         fmt.eprintfln("File %v is not a markdown file. Ignoring...", filename.fullpath)
         return
     }
+
+    // declaring the name to name the new file on disk
+    md_filename, err := strings.split(filename.fullpath, "/")
+    if err != nil {
+        fmt.eprintln("Error splitting filename:", filename.fullpath)
+        os.exit(1)
+    }
+    html_filename := strings.trim_suffix(md_filename[len(md_filename) - 1], ".md")
+
+    new_file := fmt.tprintf("%s%s.html", directory, html_filename)
+    file, new_file_err := os.create(new_file)
+    if err != nil {
+        fmt.eprintfln("Some error when creating file %s", new_file)
+        os.exit(1)
+    }
+
+    // os.open(new_file)
+    // fhandle, ferror := os.open(new_file, os.O_CREATE) 
+    // if ferror != nil {
+    //     fmt.eprintfln("Error when opening file for creation", new_file)
+    // }
 }
 
 posts_directory_exists :: proc(cwd: string) -> (string, bool) {
