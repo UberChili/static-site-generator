@@ -33,6 +33,7 @@ parse_to_html :: proc(data: []byte) -> cstring {
 }
 
 handle_file :: proc(filename: os.File_Info, directory: string) {
+    // Sanity checks
     if !os.exists(filename.fullpath) {
         fmt.eprintfln("File %v does not exist. Ignoring...", filename.fullpath)
         return
@@ -42,26 +43,34 @@ handle_file :: proc(filename: os.File_Info, directory: string) {
         return
     }
 
-    // declaring the name to name the new file on disk
+    // parsing the name to name the new html file on disk
     md_filename, err := strings.split(filename.fullpath, "/")
     if err != nil {
         fmt.eprintln("Error splitting filename:", filename.fullpath)
         os.exit(1)
     }
-    html_filename := strings.trim_suffix(md_filename[len(md_filename) - 1], ".md")
+    defer delete(md_filename)
 
-    new_file := fmt.tprintf("%s%s.html", directory, html_filename)
-    file, new_file_err := os.create(new_file)
-    if err != nil {
-        fmt.eprintfln("Some error when creating file %s", new_file)
-        os.exit(1)
-    }
+    only_filename := strings.trim_suffix(md_filename[len(md_filename) - 1], ".md")
 
-    // os.open(new_file)
-    // fhandle, ferror := os.open(new_file, os.O_CREATE) 
-    // if ferror != nil {
+    new_file := fmt.tprintf("%s%s.html", directory, only_filename)
+
+    // Opening file, although I believe this is not neccesary
+    // fhandle, file_err := os.open(new_file, os.O_CREATE) 
+    // if file_err != nil {
     //     fmt.eprintfln("Error when opening file for creation", new_file)
     // }
+    // defer os.close(fhandle)
+
+    // Reading file and parsing markdown
+    html_text := parse_to_html(read_file(filename.fullpath))
+
+    // Writing html contents to file
+    write_err := os.write_entire_file_from_string(new_file, string(html_text))
+    if write_err != nil {
+        fmt.eprintln("Error when writing to file:", filename.fullpath)
+        return
+    }
 }
 
 posts_directory_exists :: proc(cwd: string) -> (string, bool) {
@@ -78,15 +87,15 @@ posts_directory_exists :: proc(cwd: string) -> (string, bool) {
 public_directory_exists_or_create :: proc(cwd: string) -> string {
     public_dir:= fmt.tprintf("%s%s", cwd, "/public/")
 
-    if !os.exists(public_dir) || !os.is_directory(public_dir) {
-        fmt.eprintln("Error with public directory")
-        return ""
-    }
-    err := os.mkdir(public_dir)
-    if err != nil {
-        fmt.eprintln("Error creating public directory:", err)
-        return ""
-    }
+    if !os.exists(public_dir) {
+        err := os.mkdir(public_dir)
+        if err != nil {
+            fmt.eprintln("Error creating public directory:", err)
+            return ""
+        }
+        return public_dir
+    } 
+    fmt.eprintln("Directory public found!")
     return public_dir
 }
 
@@ -120,9 +129,11 @@ main :: proc() {
 
     // Ensure public directory exists, or create
     public := public_directory_exists_or_create(cwd)
-    if public != "" {
+    if public == "" {
         os.exit(1)
     }
+
+    fmt.println("public:", public)
 
     // Getting files from posts directory
     files := get_md_files(posts_dir)
@@ -133,9 +144,6 @@ main :: proc() {
 
     // Write simple HTML files to public directory
     for file in files {
-        html_content := parse_to_html(read_file(file.fullpath))
-        fmt.println(html_content)
-
-        // delete(html_content)
+        handle_file(file, public)
     }
 }
