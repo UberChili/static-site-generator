@@ -8,13 +8,13 @@ I am a programmer from Morelia learning Odin (don't tell Claude).
 
 Some things I dislike:
 
-- Python
 - Javascript
 - Java
+- Python
 - My mental fog
 - Heat
 - Getting distracted
-- When people are ignorant
+- When people are stubborn
 - Waking up early
 
 ## Conclusion

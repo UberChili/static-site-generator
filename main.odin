@@ -8,6 +8,7 @@ import "core:fmt"
 
 import cm "vendor:commonmark"
 
+// reads a file as bytes
 read_file :: proc(filename: string) -> []byte {
     if filename == "" {
         fmt.eprintln("Filename can't be empty. Ignoring")
@@ -22,16 +23,7 @@ read_file :: proc(filename: string) -> []byte {
     return data
 }
 
-parse_to_html :: proc(data: []byte) -> cstring {
-    root := cm.parse_document(raw_data(data), len(data), cm.DEFAULT_OPTIONS)
-    defer cm.node_free(root)
-
-    html := cm.render_html(root, cm.DEFAULT_OPTIONS)
-    // defer cm.free(html)
-
-    return html
-}
-
+// Reads a file, parses to html and writes to disk
 handle_file :: proc(filename: os.File_Info, directory: string) {
     // Sanity checks
     if !os.exists(filename.fullpath) {
@@ -56,11 +48,17 @@ handle_file :: proc(filename: os.File_Info, directory: string) {
     new_file := fmt.tprintf("%s%s.html", directory, only_filename)
 
     // Reading file and parsing markdown
-    // This approach causes a leak. I might need to move the entirety of the html rendering here
-    html_text := parse_to_html(read_file(filename.fullpath))
+    fmt.printfln("[Parsing] %s into %s", filename.fullpath, new_file)
+    data := read_file(filename.fullpath)
+    root := cm.parse_document(raw_data(data), len(data), cm.DEFAULT_OPTIONS)
+    defer cm.node_free(root)
+
+    html := cm.render_html(root, cm.DEFAULT_OPTIONS)
+    defer cm.free(html)
 
     // Writing html contents to file
-    write_err := os.write_entire_file_from_string(new_file, string(html_text))
+    fmt.printfln("[Writing] %s into public/", new_file)
+    write_err := os.write_entire_file_from_string(new_file, string(html))
     if write_err != nil {
         fmt.eprintln("Error when writing to file:", filename.fullpath)
         return
@@ -89,7 +87,7 @@ public_directory_exists_or_create :: proc(cwd: string) -> string {
         }
         return public_dir
     } 
-    fmt.eprintln("Directory public found!")
+    fmt.eprintln("public directory found!")
     return public_dir
 }
 
@@ -126,8 +124,6 @@ main :: proc() {
     if public == "" {
         os.exit(1)
     }
-
-    fmt.println("public:", public)
 
     // Getting files from posts directory
     files := get_md_files(posts_dir)
