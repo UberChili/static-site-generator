@@ -63,4 +63,4 @@ parse_to_html :: proc(data: []byte) -> cstring {
 }
 ``` 
 
-And then use it in another function, but this quickly seemed to me to be not ideal. So I thought instead to use a single function to get the html and to write to disk. It ended up being more or less like the following:
+And then use it in another function, but this quickly seemed to me to be not ideal. So I thought instead to use a single function to get the html and to write to disk. Also, notice how the defer line is commented out. This is because we need to return this data to the caller, so another function can use it to write that information to disk. However, if I leave that line commented out, We get a memory leak!

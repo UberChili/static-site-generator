@@ -55,14 +55,8 @@ handle_file :: proc(filename: os.File_Info, directory: string) {
 
     new_file := fmt.tprintf("%s%s.html", directory, only_filename)
 
-    // Opening file, although I believe this is not neccesary
-    // fhandle, file_err := os.open(new_file, os.O_CREATE) 
-    // if file_err != nil {
-    //     fmt.eprintfln("Error when opening file for creation", new_file)
-    // }
-    // defer os.close(fhandle)
-
     // Reading file and parsing markdown
+    // This approach causes a leak. I might need to move the entirety of the html rendering here
     html_text := parse_to_html(read_file(filename.fullpath))
 
     // Writing html contents to file
