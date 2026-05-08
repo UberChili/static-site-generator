@@ -67,6 +67,7 @@ And then call it from another procedure, tentatively named *handle_file*, but th
 
 ## A single procedure to handle files
 The solution for this is to use a single procedure to read the file (although this can still be done by calling *read_file*), then parsing the contents to html, and then printing the html code to disk. The best candidate is to use our already working, although leaky, *handle_file* procedure. The final version, at least for this part, looks like the following:
+
 ```odin
 handle_file :: proc(filename: os.File_Info, directory: string) {
     // Sanity checks
@@ -109,4 +110,19 @@ handle_file :: proc(filename: os.File_Info, directory: string) {
     }
 }
 ```
-I moved the steps of *parse_to_html* into this function so we can work with and free the allocated data more easily when going out of scope. The procedure is starting to become somewhat big but I believe it is still pretty straightforward at this point.
+
+Finally, we get some nice, although very simple and raw, **HTML** output which we can see on the browser (by using an http server like Python's built in one). It's not much at all, but it's pretty nice to see the actual expected output so far.
+
+## Conclusion of Part 2
+I moved the steps of *parse_to_html* into this function so we can work with and free the allocated data more easily when going out of scope. The procedure is starting to become somewhat big but I believe it is still pretty straightforward at this point. Next is maybe splitting code into different source files and likely start working with frontmatters.
+
+# Part 3: Frontmatters
+
+## Splitting things up a little
+First of all I thought that the main Odin file was getting a tiny bit too big to handle, and that kind of stuff sometimes annoys me too much. So I decided to split the file into multiple source files, separated by at least some minimal manner of organization. The following procedures: *read_file*, *get_md_files*, *posts_directory_exists*, and *public_directory_exists_or_create*, to **utils.odin**, in which I will continue to work, and our chunky *handle_file* procedure to **processor.odin**, which seems clean, as I plan to put everything related to the parsing and dealing with the actual Markdown files in there. So the source files are now:
+
+- main.odin
+- processor.odin, and
+- utils.odin
+
+## Working with frontmatters or "archetypes"
