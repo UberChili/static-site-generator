@@ -1,10 +1,50 @@
 package main
 
+import "core:encoding/json"
 import "core:fmt"
 import "core:os"
 import "core:strings"
 
 import cm "vendor:commonmark"
+
+Frontmatter :: struct {
+    title: string,
+    author: string,
+    date: string,
+}
+
+// Parses the frontmatter/archetype
+parse_frontmatter :: proc(filename: os.File_Info, data: []byte) -> (Frontmatter, string) {
+    text := string(data)
+
+    if !strings.starts_with(text, "---") {
+        fmt.eprintln("Found no valid frontmatter in file. Or another error")
+        return Frontmatter{}, ""
+    }
+    text = text[3:] 
+    frontmatter_end_text := "---\n"
+
+    frontmatter_end := strings.index(text, frontmatter_end_text)
+    if frontmatter_end < 0 {
+        frontmatter_end_text = "---\r\n" 
+        frontmatter_end = strings.index(text,  frontmatter_end_text)
+    }
+    if frontmatter_end < 0 {
+        fmt.eprintln("Missing pair of --- for frontmatter for %q", filename.fullpath)
+    }
+
+    closing_end := frontmatter_end + len(frontmatter_end_text) // skip the "---\n" or the "---\r\n"
+    body := strings.trim_space(text[closing_end:])
+
+    fm_text := strings.trim_space(text[:frontmatter_end])
+    frontmatter: Frontmatter
+    unm_err := json.unmarshal_string(fm_text, &frontmatter, .JSON5, context.temp_allocator)
+    if unm_err != nil {
+        fmt.eprintln("Error when unmarshaling frontmatter for %q", filename.fullpath)
+        return Frontmatter{}, ""
+    }
+    return frontmatter, strings.trim_space(body)
+}
 
 // Reads a file, parses to html and writes to disk
 handle_file :: proc(filename: os.File_Info, directory: string) {
@@ -30,10 +70,13 @@ handle_file :: proc(filename: os.File_Info, directory: string) {
 
     new_file := fmt.tprintf("%s%s.html", directory, only_filename)
 
+    // Getting frontmatter and data without frontmatter
+    frontmatter, data_without_frontmatter := parse_frontmatter(filename, read_file(filename.fullpath))
+
     // Reading file and parsing markdown
     fmt.printfln("[Parsing] %s into %s", filename.fullpath, new_file)
-    data := read_file(filename.fullpath)
-    root := cm.parse_document(raw_data(data), len(data), cm.DEFAULT_OPTIONS)
+    // data := read_file(filename.fullpath)
+    root := cm.parse_document(raw_data(data_without_frontmatter), len(data_without_frontmatter), cm.DEFAULT_OPTIONS)
     defer cm.node_free(root)
 
     html := cm.render_html(root, cm.DEFAULT_OPTIONS)
@@ -47,5 +90,3 @@ handle_file :: proc(filename: os.File_Info, directory: string) {
         return
     }
 }
-
-

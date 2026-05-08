@@ -57,5 +57,3 @@ public_directory_exists_or_create :: proc(cwd: string) -> string {
     fmt.eprintln("public directory found!")
     return public_dir
 }
-
-

@@ -1,3 +1,11 @@
+---
+{
+    "title": "Building a static site generator",
+    "author": "Andres",
+    "date": "2026-05-06",
+}
+---
+
 # Building a Static Site Generator
 
 ## The Idea
@@ -126,3 +134,64 @@ First of all I thought that the main Odin file was getting a tiny bit too big to
 - utils.odin
 
 ## Working with frontmatters or "archetypes"
+This was a little tricky. I couldn't help but assisting myself with Ginger Bill's [video](https://www.youtube.com/watch?v=YvnTsiIFXeI&t=485s) because I was stuck for a while there. And I have to insist that I'm trying my absolute hardest to not copy his code. But at the end I assisted myself by using the way he parsed the frontmatter, also, like he suggested, I decided to not use YAML:
+
+> If you have a choice to use YAML, don't use it is my recommendation. Never use it! In fact, it's not a recommendation, it's a moral obligation! Don't use YAML, it's dreadful
+
+A first version of the **parse_frontmatter** procedure, along with the **Frontmatter** struct, which will likely be modified, looks like the following:
+
+```odin
+Frontmatter :: struct {
+    title: string,
+    author: string,
+    date: string,
+}
+
+// Parses the frontmatter/archetype
+parse_frontmatter :: proc(filename: os.File_Info, data: []byte) -> (Frontmatter, string) {
+    text := string(data)
+
+    if !strings.starts_with(text, "---") {
+        fmt.eprintln("Found no valid frontmatter in file. Or another error")
+        return Frontmatter{}, ""
+    }
+    text = text[3:] 
+    frontmatter_end_text := "---\n"
+
+    frontmatter_end := strings.index(text, frontmatter_end_text)
+    if frontmatter_end < 0 {
+        frontmatter_end_text = "---\r\n" 
+        frontmatter_end = strings.index(text,  frontmatter_end_text)
+    }
+    if frontmatter_end < 0 {
+        fmt.eprintln("Missing pair of --- for frontmatter for %q", filename.fullpath)
+    }
+
+    closing_end := frontmatter_end + len(frontmatter_end_text) // skip the "---\n" or the "---\r\n"
+    body := strings.trim_space(text[closing_end:])
+
+    fm_text := strings.trim_space(text[:frontmatter_end])
+    frontmatter: Frontmatter
+    unm_err := json.unmarshal_string(fm_text, &frontmatter, .JSON5, context.temp_allocator)
+    if unm_err != nil {
+        fmt.eprintln("Error when unmarshaling frontmatter for %q", filename.fullpath)
+        return Frontmatter{}, ""
+    }
+    return frontmatter, strings.trim_space(body)
+}
+
+```
+
+and the example json might look like:
+```json
+{
+    "title": "Building a static site generator",
+    "author": "Andres",
+    "date": "2026-05-06",
+}
+```
+Of course, this goes between a pair of three dashes whose serve to delimit a frontmatter.
+
+As you can see, for now it is... minimal? And maybe somewhat dumb code. I'm only catching a post title, an author and a date. Chances are we will need to work more on this as the project grows. But so far it's working. So, time to move on to some basic templating.
+
+## A basic template
