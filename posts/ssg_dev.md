@@ -331,17 +331,20 @@ main :: proc() {
 Now, I deleted the rest of the redundant procedures and **utils.odin** is now "ligher", so to speak.
 
 ## A new directory we need
-Now, we need an actual *static* directory. This directory is normally where stuff like fonts, images, and **CSS** styles are stored. So far what we need is something like:
+Now, we need an actual *static* directory. This directory is normally where stuff like fonts, images, and **CSS** styles are stored. So far what we need is something like shown in the margin note.
 
+<label for="mn-static-dir" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-static-dir" class="margin-toggle"/>
+<span class="marginnote">
 static/
 └── css/
    └── et-book/
    └── style.css
-
+</span>
 
 We also need to update our base html template. We will add the following line:
 ```html
-<link rel="stylesheet" href="/static/css/tufte.css">
+<link rel="stylesheet" href="static/css/tufte.css">
 ```
 
 Notice we will be using the cool [Tufte CSS](https://edwardtufte.github.io/tufte-css/).
@@ -361,4 +364,68 @@ I will also be making some small modifications to our base template file, nothin
 This produces a very classy, readable and elegant book-style that looks just great for my style, which, hopefully you can already see as you read this article!
 
 ## Some configuration
-It seems to work out of the box! Except I can add some configurations to better suit my style. Let's check it out.
+It seems to work out of the box! Except we need to add some configurations to better suit my style. Let's check it out. First of all, we needed to change some elements of the base template. Which ended up being something almost completely different. So I'll just show it here again:
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{title}}</title>
+    <meta name="author" content="{{author}}">
+
+    <link rel="stylesheet" href="static/tufte.css">
+    <link rel="stylesheet" href="static/css/custom.css">   <!-- your tweaks -->
+</head>
+<body>
+    <article>
+        <header>
+            <!-- <h1>{{title}}</h1> -->
+            <p class="subtitle">By {{author}} • {{date}}</p>
+        </header>
+
+        <main>
+            {{content}}
+        </main>
+
+        <footer>
+            <p>Stay Medieval ❤️‍🔥</p>
+        </footer>
+    </article>
+</body>
+</html>
+```
+
+This is following Tufte's convention with a little aid by Grok (I'm not very fluent in HTML).
+
+Key changes:
+- Wrapped everything in **<article>** (Tufte's main container)
+- Removed the **<main>** wrapper
+- Added a **.subtitle** class for the author/date line
+
+I also added a custom css file to fine tune some things, also using Grok because fuck CSS:
+```CSS
+body {
+    max-width: 72em;           
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 1.5em;
+}
+
+article {
+    padding: 0;
+}
+
+.byline {
+    margin-top: 0.2em;
+    color: inherit;            /* keep existing colors */
+    opacity: 0.8;
+}
+
+/* Optional: fine-tune margin notes if they still feel off */
+.marginnote, .sidenote {
+    margin-right: -35%;
+    width: 30%;
+}
+```
+
+Got it, now this looks way better. And I'm starting to feel very happy with the results!

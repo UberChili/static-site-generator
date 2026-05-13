@@ -1,0 +1,22 @@
+body {
+    max-width: 72em;           /* This is very close to Ginger Bill's feel */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 1.5em;
+}
+
+article {
+    padding: 0;
+}
+
+.byline {
+    margin-top: 0.2em;
+    color: inherit;            /* keep your existing colors */
+    opacity: 0.8;
+}
+
+/* Optional: fine-tune margin notes if they still feel off */
+.marginnote, .sidenote {
+    margin-right: -35%;
+    width: 30%;
+}
