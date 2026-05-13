@@ -12,20 +12,16 @@ main :: proc() {
     }
     defer delete(cwd, context.temp_allocator)
 
-    // Ensure posts directory exists
-    posts_dir, exists := posts_directory_exists(cwd)
-    if !exists {
-        os.exit(1)
-    }
-
-    // Ensure public directory exists, or create
-    public := public_directory_exists_or_create(cwd)
-    if public == "" {
+    // Ensure required directories exist, or create
+    posts := directory_exists_or_create(cwd, "/posts/")
+    public := directory_exists_or_create(cwd, "/public/")
+    static := directory_exists_or_create(cwd, "/static/")
+    if public == "" || posts == "" || static == ""{
         os.exit(1)
     }
 
     // Getting files from posts directory
-    files := get_md_files(posts_dir)
+    files := get_md_files(posts)
     if files == nil {
         os.exit(1)
     }

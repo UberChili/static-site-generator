@@ -32,28 +32,15 @@ get_md_files :: proc(path: string) -> []os.File_Info {
     return files
 }
 
-posts_directory_exists :: proc(cwd: string) -> (string, bool) {
-    posts_dir := fmt.tprintf("%s%s", cwd, "/posts/")
+directory_exists_or_create :: proc(cwd: string, subdir: string) -> string {
+    directory := fmt.tprintf("%s%s", cwd, subdir)
 
-    if !os.exists(posts_dir) || !os.is_directory(posts_dir) {
-        fmt.eprintln("Not a directory or doesn't exist:", posts_dir)
-        return "", false
-    }
-
-    return posts_dir, true
-}
-
-public_directory_exists_or_create :: proc(cwd: string) -> string {
-    public_dir:= fmt.tprintf("%s%s", cwd, "/public/")
-
-    if !os.exists(public_dir) {
-        err := os.mkdir(public_dir)
+    if !os.exists(directory) {
+        err := os.mkdir(directory)
         if err != nil {
-            fmt.eprintln("Error creating public directory:", err)
+            fmt.eprintfln("Error creating %q directory:", subdir, err)
             return ""
         }
-        return public_dir
-    } 
-    fmt.eprintln("public directory found!")
-    return public_dir
+    }
+    return directory
 }

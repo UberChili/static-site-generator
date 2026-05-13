@@ -276,3 +276,65 @@ This results in a nice, although still very raw, html output. We're getting ther
 
 ## Conclusion of Part 3
 We split our program into different files for better organization and readability and we have implemented a basic frontmatter parsing, using JSON for now. We also got working the functionality to replace placeholders in a basic template. Later on, we might need to expand this to be able to work with different frontmatter values, ss well as different templates. I suppose this functionality will come in time as the CLI needs to handle stuff like different themes, for example. Although for my uses, there's a good chance that I'll just set a default theme/colorscheme, which is what I'll always use for my blog/website.
+
+# Part 4: Adding some CSS
+
+## Cleaning up some redundant procedures
+First, I noticed our **main.odin** file was a little ugly and also noticed a pattern: I was creating multiple unneeded procedures that did the same thing. So I factured that out into a single procedure and cleaned **main** a little. The new procedure looks like:
+```odin
+directory_exists_or_create :: proc(cwd: string, subdir: string) -> string {
+    directory := fmt.tprintf("%s%s", cwd, subdir)
+
+    if !os.exists(directory) {
+        err := os.mkdir(directory)
+        if err != nil {
+            fmt.eprintfln("Error creating %q directory:", subdir, err)
+            return ""
+        }
+    }
+    return directory
+}
+```
+
+And main, so far, looks like:
+```odin
+main :: proc() {
+    cwd, err := os.get_working_directory(context.temp_allocator)
+    if err != nil {
+        fmt.eprintln("Error with current working directory:", err)
+        os.exit(1)
+    }
+    defer delete(cwd, context.temp_allocator)
+
+    // Ensure required directories exist, or create
+    posts := directory_exists_or_create(cwd, "/posts/")
+    public := directory_exists_or_create(cwd, "/public/")
+    static := directory_exists_or_create(cwd, "/static/")
+    if public == "" || posts == "" || static == ""{
+        os.exit(1)
+    }
+
+    // Getting files from posts directory
+    files := get_md_files(posts)
+    if files == nil {
+        os.exit(1)
+    }
+    defer delete(files, context.temp_allocator)
+
+    // Write simple HTML files to public directory
+    for file in files {
+        handle_file(file, public)
+    }
+}
+```
+
+Now, I deleted the rest of the redundant procedures and **utils.odin** is now "ligher", so to speak.
+
+## A new directory we need
+Now, we need an actual *static* directory. This directory is normally where stuff like fonts, images, and **CSS** styles are stored. So far what we need is something like:
+
+static/
+└── css/
+    └── style.css
+
+
