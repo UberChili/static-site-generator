@@ -15,8 +15,16 @@ main :: proc() {
     // Ensure required directories exist, or create
     posts := directory_exists_or_create(cwd, "/posts/")
     public := directory_exists_or_create(cwd, "/public/")
+    public_static := directory_exists_or_create(cwd, "/public/static")
     static := directory_exists_or_create(cwd, "/static/")
     if public == "" || posts == "" || static == ""{
+        os.exit(1)
+    }
+
+    // Copy static into public
+    copy_err := os.copy_directory_all(public_static, static)
+    if copy_err != nil {
+        fmt.println("Error copying %q to %q", static, public)
         os.exit(1)
     }
 

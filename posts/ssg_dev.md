@@ -347,8 +347,18 @@ We also need to update our base html template. We will add the following line:
 Notice we will be using the cool [Tufte CSS](https://edwardtufte.github.io/tufte-css/).
 (Another inspiration from following Ginger Bill. Thanks, man).
 It is funny because I don't think I even use margin notes much, if at all! But that's alright, I still really like how it looks like, so that's that. 
+
+<label for="mn-demo" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-demo" class="margin-toggle"/>
+<span class="marginnote">
+    Oh hey, here's a margin note!
+</span>
+
 [Tufte CSS](https://edwardtufte.github.io/tufte-css/) is Open Source, so we grab it and copy the **et-book** directory (which contains the fonts) and the **style.css** file into our *static* directory.
 
 I will also be making some small modifications to our base template file, nothing worth mentioning here, for now.
 
 This produces a very classy, readable and elegant book-style that looks just great for my style, which, hopefully you can already see as you read this article!
+
+## Some configuration
+It seems to work out of the box! Except I can add some configurations to better suit my style. Let's check it out.

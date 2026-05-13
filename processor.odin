@@ -76,11 +76,16 @@ handle_file :: proc(filename: os.File_Info, directory: string) {
     // Reading file and parsing markdown
     fmt.printfln("[Parsing] %s into %s", filename.fullpath, new_file)
     // data := read_file(filename.fullpath)
-    root := cm.parse_document(raw_data(data_without_frontmatter), len(data_without_frontmatter), cm.DEFAULT_OPTIONS)
+    /* options := cm.DEFAULT_OPTIONS | {cm.Options.Unsafe} */
+    root := cm.parse_document(
+        raw_data(data_without_frontmatter),
+        len(data_without_frontmatter),
+        cm.DEFAULT_OPTIONS)
     defer cm.node_free(root)
 
     // Rendering html
-    html := cm.render_html(root, cm.DEFAULT_OPTIONS)
+    /* html := cm.render_html(root, cm.DEFAULT_OPTIONS) */
+    html := cm.render_html(root, {cm.Options.Unsafe})
     defer cm.free(html)
 
     // Replacing template contents
