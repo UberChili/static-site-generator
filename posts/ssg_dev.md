@@ -224,9 +224,14 @@ We'll use the following basic template, for now:
 
 Simple enough, let's try to pluck the corrent values in those placeholders. We can do that by adding the following lines to our **handle_file** procedure:
 ```odin
-// loading the html template and replacing the title
+// loading the html template and replace
 html_template := string(read_file("templates/base.html"))
+// Title
 html_template, _ = strings.replace_all(html_template, "{{title}}", frontmatter.title, context.temp_allocator)
+// Author
+html_template, _ = strings.replace_all(html_template, "{{author}}", frontmatter.author, context.temp_allocator)
+// Date
+html_template, _ = strings.replace_all(html_template, "{{date}}", frontmatter.date, context.temp_allocator)
 
 html := cm.render_html(root, cm.DEFAULT_OPTIONS)
 defer cm.free(html)
@@ -235,3 +240,39 @@ defer cm.free(html)
 html_template, _ = strings.replace_all(html_template, "{{content}}", string(html), context.temp_allocator)
 ```
 Of course, that includes again the html rendering. I decided to keep it in the same place so I wouldn't get lost when reading this.
+
+Hmm, that code looks a little ugly and disorganized. Maybe we can do something like:
+
+```odin
+// Rendering html
+html := cm.render_html(root, cm.DEFAULT_OPTIONS)
+defer cm.free(html)
+
+// Replacing template contents
+template := string(read_file("templates/base.html"))
+final_html := apply_template(template, frontmatter, string(html))
+
+// Writing html contents to file
+... [snip]...
+
+apply_template :: proc(template: string, frontmatter: Frontmatter, body: string) -> string {
+    // Title
+    html, _ := strings.replace_all(template, "{{title}}", frontmatter.title, context.temp_allocator)
+    // Author
+    html, _ = strings.replace_all(html, "{{author}}", frontmatter.author, context.temp_allocator)
+    // Date
+    html, _ = strings.replace_all(html, "{{date}}", frontmatter.date, context.temp_allocator)
+
+    // Final
+    html, _ = strings.replace_all(html, "{{content}}", body, context.temp_allocator)
+
+    return html
+}
+```
+
+We have abstracted out a nice **apply_template** proc. This could be done more elegantly but for "moving-on" purposes we'll leave it like this. And, at least the big **handle_file** proc is trying to stay somewhat small or at least not grow indiscriminately!
+
+This results in a nice, although still very raw, html output. We're getting there!
+
+## Conclusion of Part 3
+We split our program into different files for better organization and readability and we have implemented a basic frontmatter parsing, using JSON for now. We also got working the functionality to replace placeholders in a basic template. Later on, we might need to expand this to be able to work with different frontmatter values, ss well as different templates. I suppose this functionality will come in time as the CLI needs to handle stuff like different themes, for example. Although for my uses, there's a good chance that I'll just set a default theme/colorscheme, which is what I'll always use for my blog/website.

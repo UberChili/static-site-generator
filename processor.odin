@@ -79,25 +79,33 @@ handle_file :: proc(filename: os.File_Info, directory: string) {
     root := cm.parse_document(raw_data(data_without_frontmatter), len(data_without_frontmatter), cm.DEFAULT_OPTIONS)
     defer cm.node_free(root)
 
-    // loading the html template and replacing the title
-    html_template := string(read_file("templates/base.html"))
-    html_template, _ = strings.replace_all(html_template, "{{title}}", frontmatter.title, context.temp_allocator)
-
+    // Rendering html
     html := cm.render_html(root, cm.DEFAULT_OPTIONS)
     defer cm.free(html)
 
     // Replacing template contents
-    html_template, _ = strings.replace_all(html_template, "{{content}}", string(html), context.temp_allocator)
+    template := string(read_file("templates/base.html"))
+    final_html := apply_template(template, frontmatter, string(html))
 
     // Writing html contents to file
     fmt.printfln("[Writing] %s into public/", new_file)
-    write_err := os.write_entire_file_from_string(new_file, string(html))
+    write_err := os.write_entire_file_from_string(new_file, string(final_html))
     if write_err != nil {
         fmt.eprintln("Error when writing to file:", filename.fullpath)
         return
     }
 }
 
-/* handle_fields :: proc(frontmatter: Frontmatter, text: string) -> map[string]string { */
-/*     result := make(map[string]string) */
-/* } */
+apply_template :: proc(template: string, frontmatter: Frontmatter, body: string) -> string {
+    // Title
+    html, _ := strings.replace_all(template, "{{title}}", frontmatter.title, context.temp_allocator)
+    // Author
+    html, _ = strings.replace_all(html, "{{author}}", frontmatter.author, context.temp_allocator)
+    // Date
+    html, _ = strings.replace_all(html, "{{date}}", frontmatter.date, context.temp_allocator)
+
+    // Final
+    html, _ = strings.replace_all(html, "{{content}}", body, context.temp_allocator)
+
+    return html
+}
