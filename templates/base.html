@@ -1,8 +1,22 @@
 <!DOCTYPE html>
-<html>
-<head><title>{{title}}</title></head>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{title}}</title>
+    <meta name="author" content="{{author}}">
+</head>
 <body>
-    <h1>{{title}}</h1>
-    {{content}}
+    <header>
+        <h1>{{title}}</h1>
+        <p>By {{author}} • {{date}}</p>
+    </header>
+
+    <main>
+        {{content}}
+    </main>
+
+    <footer>
+        <p>My Static Site Generator • Built with Odin</p>
+    </footer>
 </body>
 </html>

@@ -79,8 +79,15 @@ handle_file :: proc(filename: os.File_Info, directory: string) {
     root := cm.parse_document(raw_data(data_without_frontmatter), len(data_without_frontmatter), cm.DEFAULT_OPTIONS)
     defer cm.node_free(root)
 
+    // loading the html template and replacing the title
+    html_template := string(read_file("templates/base.html"))
+    html_template, _ = strings.replace_all(html_template, "{{title}}", frontmatter.title, context.temp_allocator)
+
     html := cm.render_html(root, cm.DEFAULT_OPTIONS)
     defer cm.free(html)
+
+    // Replacing template contents
+    html_template, _ = strings.replace_all(html_template, "{{content}}", string(html), context.temp_allocator)
 
     // Writing html contents to file
     fmt.printfln("[Writing] %s into public/", new_file)
@@ -90,3 +97,7 @@ handle_file :: proc(filename: os.File_Info, directory: string) {
         return
     }
 }
+
+/* handle_fields :: proc(frontmatter: Frontmatter, text: string) -> map[string]string { */
+/*     result := make(map[string]string) */
+/* } */

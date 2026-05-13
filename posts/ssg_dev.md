@@ -195,3 +195,43 @@ Of course, this goes between a pair of three dashes whose serve to delimit a fro
 As you can see, for now it is... minimal? And maybe somewhat dumb code. I'm only catching a post title, an author and a date. Chances are we will need to work more on this as the project grows. But so far it's working. So, time to move on to some basic templating.
 
 ## A basic template
+
+We'll use the following basic template, for now:
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{title}}</title>
+    <meta name="author" content="{{author}}">
+</head>
+<body>
+    <header>
+        <h1>{{title}}</h1>
+        <p>By {{author}} • {{date}}</p>
+    </header>
+
+    <main>
+        {{content}}
+    </main>
+
+    <footer>
+        <p>My Static Site Generator • Built with Odin</p>
+    </footer>
+</body>
+</html>
+```
+
+Simple enough, let's try to pluck the corrent values in those placeholders. We can do that by adding the following lines to our **handle_file** procedure:
+```odin
+// loading the html template and replacing the title
+html_template := string(read_file("templates/base.html"))
+html_template, _ = strings.replace_all(html_template, "{{title}}", frontmatter.title, context.temp_allocator)
+
+html := cm.render_html(root, cm.DEFAULT_OPTIONS)
+defer cm.free(html)
+
+// Replacing template contents
+html_template, _ = strings.replace_all(html_template, "{{content}}", string(html), context.temp_allocator)
+```
+Of course, that includes again the html rendering. I decided to keep it in the same place so I wouldn't get lost when reading this.
