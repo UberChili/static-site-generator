@@ -6,9 +6,9 @@
 }
 ---
 
-# Building a Static Site Generator
+<!-- # Building a Static Site Generator -->
 
-## The Idea
+# The Idea
 I wanted to work on a static site generator for a while now. Up until now, I've been using Go's Hugo, which works great but is pretty damn overkill for my needs. Not to mention that, I kind of feel like learning it has been too hard for me. Also, I've been thinking on some project ideas lately and a static site generator seemed like a decent project for my skill level. First, I tried writing it in Rust but dropped the project shortly after starting. No real reason why, it just kind of happened.
 
 Then, some days ago, I came accross [Ginger Bill's video](https://www.gingerbill.org/) in which he explains how he wrote his own SSG. What a coincidence! When I watched that video, I was already one or two days into learning a little **Odin**. So it seemed like a great project idea. So I started working. 
@@ -379,8 +379,9 @@ It seems to work out of the box! Except we need to add some configurations to be
 <body>
     <article>
         <header>
-            <!-- <h1>{{title}}</h1> -->
-            <p class="subtitle">By {{author}} • {{date}}</p>
+            <h1>{{title}}</h1>
+            <!-- <p class="subtitle">By {{author}} • {{date}}</p> -->
+            <p class="subtitle">{{date}}</p>
         </header>
 
         <main>
