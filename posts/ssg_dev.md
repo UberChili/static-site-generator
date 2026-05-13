@@ -335,6 +335,20 @@ Now, we need an actual *static* directory. This directory is normally where stuf
 
 static/
 └── css/
-    └── style.css
+   └── et-book/
+   └── style.css
 
 
+We also need to update our base html template. We will add the following line:
+```html
+<link rel="stylesheet" href="/static/css/tufte.css">
+```
+
+Notice we will be using the cool [Tufte CSS](https://edwardtufte.github.io/tufte-css/).
+(Another inspiration from following Ginger Bill. Thanks, man).
+It is funny because I don't think I even use margin notes much, if at all! But that's alright, I still really like how it looks like, so that's that. 
+[Tufte CSS](https://edwardtufte.github.io/tufte-css/) is Open Source, so we grab it and copy the **et-book** directory (which contains the fonts) and the **style.css** file into our *static* directory.
+
+I will also be making some small modifications to our base template file, nothing worth mentioning here, for now.
+
+This produces a very classy, readable and elegant book-style that looks just great for my style, which, hopefully you can already see as you read this article!
