@@ -1,22 +1,37 @@
-body {
-    max-width: 72em;           /* This is very close to Ginger Bill's feel */
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 1.5em;
-}
 
+body {
+    max-width: 48em; /* Ginger Bill's exact feel */
+    margin: 2em auto;
+    padding: 0 1.5em;
+    padding-right: 12%;
+}
 article {
     padding: 0;
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
 }
-
-.byline {
-    margin-top: 0.2em;
-    color: inherit;            /* keep your existing colors */
-    opacity: 0.8;
+/* Optional: don't justify headings or code */
+h1, h2, h3, h4, pre, code {
+    text-align: left;
 }
-
-/* Optional: fine-tune margin notes if they still feel off */
+/* Margin notes positioning (Tufte standard) */
 .marginnote, .sidenote {
-    margin-right: -35%;
-    width: 30%;
+    float: right;
+    clear: right;
+    margin-right: -38%;
+    width: 32%;
+    margin-top: 0.4em;
+    font-size: 0.95rem;
+}
+/* Code blocks */
+pre {
+    background-color: #1e1e1e;
+    padding: 1.25em 1.5em;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 0.95rem;
+}
+code {
+    font-family: "et-book", monospace;
 }

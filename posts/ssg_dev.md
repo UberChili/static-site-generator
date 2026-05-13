@@ -333,14 +333,10 @@ Now, I deleted the rest of the redundant procedures and **utils.odin** is now "l
 ## A new directory we need
 Now, we need an actual *static* directory. This directory is normally where stuff like fonts, images, and **CSS** styles are stored. So far what we need is something like shown in the margin note.
 
-<label for="mn-static-dir" class="margin-toggle">&#8853;</label>
-<input type="checkbox" id="mn-static-dir" class="margin-toggle"/>
-<span class="marginnote">
 static/
 └── css/
    └── et-book/
    └── style.css
-</span>
 
 We also need to update our base html template. We will add the following line:
 ```html
