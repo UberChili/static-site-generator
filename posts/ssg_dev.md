@@ -334,9 +334,13 @@ Now, I deleted the rest of the redundant procedures and **utils.odin** is now "l
 Now, we need an actual *static* directory. This directory is normally where stuff like fonts, images, and **CSS** styles are stored. So far what we need is something like shown in the margin note.
 
 static/
+
 └── css/
+
    └── et-book/
+
    └── style.css
+
 
 We also need to update our base html template. We will add the following line:
 ```html
@@ -425,4 +429,6 @@ article {
 }
 ```
 
-Got it, now this looks way better. And I'm starting to feel very happy with the results!
+Except this didn't fully work. Every time I tried something new, something else was missing or janky. I ended up, with even further assistance of all Grok, ChatGPT and Claude, with a **custom.css** that looked considerably different than the one shown above. I'll omit showing it fully again as I think it would not be that interesting for the purposes of this post/devblog. The important thing to keep in mind here is, I used a custom.css to fine tune some elements in how the theme looks.
+
+Done. And I'm starting to feel very happy with the results!

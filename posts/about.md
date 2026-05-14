@@ -47,7 +47,7 @@ Looking for a Software Engineer? Please check out [my resume page](/resume/)
 <input type="checkbox" id="mn-image-demo" class="margin-toggle"/>
 <span class="marginnote">
 <img src="static/images/standrew.jpg" alt="Saint Andrew">
-<figcaption>The Apostle Saint Andrew</figcaption>
+<figcaption>The Apostle Saint Andrew, the first called.</figcaption>
 </span>
 
 
