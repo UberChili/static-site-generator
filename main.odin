@@ -1,5 +1,6 @@
 package main
 
+import "core:slice"
 import "core:os"
 import "core:fmt"
 
@@ -44,7 +45,10 @@ main :: proc() {
         handle_file(file, public, &posts_arr)
     }
 
-    // Printing just for testing
+    // Sorting Posts
+    slice.sort_by(posts_arr[:], proc(a, b: Post) -> bool {
+        return a.date > b.date
+    })
     for post in posts_arr {
         fmt.println(post.url)
     }

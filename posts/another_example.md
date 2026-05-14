@@ -1,3 +1,11 @@
+---
+{
+    "title": "Another Example",
+    "author": "Andrés",
+    "date": "2026-05-05",
+}
+---
+
 # Another example
 
 This is another example post
