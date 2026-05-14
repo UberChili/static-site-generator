@@ -1,45 +1,137 @@
-/* Force tighter line spacing like Ginger Bill */
+/* Oh my God this also worked */
+/* BODY POSITION */
+body {
+    /* margin-left: 18%; */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* TEXT WIDTH - change the % to taste, smaller = narrower */
+main p,
+main li,
+main dl,
+main ol,
+main ul {
+    width: 65%;
+}
+
+/* TIGHTER LINE SPACING */
 article p,
 article li,
 article blockquote {
-    line-height: 1.2 !important;   /* 1.55 is very close to his */
+    line-height: 1.2 !important;
+    width: 75%;
 }
 
-body {
-    max-width: 52em; /* Ginger Bill's exact feel */
-    margin: 2em auto;
-    padding: 0 1.5em;
-    padding-right: 12%;
-}
+/* JUSTIFIED TEXT */
 article {
-    /* line-height: 1.2; */
     padding: 0;
     text-align: justify;
     text-justify: inter-word;
     hyphens: auto;
 }
-/* Optional: don't justify headings or code */
+
+/* DON'T JUSTIFY HEADINGS OR CODE */
 h1, h2, h3, h4, pre, code {
     text-align: left;
 }
-/* Margin notes positioning (Tufte standard) */
+
+/* SIDENOTES / MARGINNOTES */
 .marginnote, .sidenote {
     float: right;
     clear: right;
     margin-right: -38%;
     width: 32%;
     margin-top: 0.4em;
-    /* font-size: 0.95rem; */
-    font-size: 1.11rem;
+    font-size: 1.3rem;
 }
-/* Code blocks */
-pre {
-    background-color: #1e1e1e;
-    padding: 1.25em 1.5em;
-    border-radius: 6px;
+
+/* CODE BLOCKS */
+pre > code {
+    width: 100%;
+    margin-left: 0;
     overflow-x: auto;
-    font-size: 0.95rem;
+    white-space: pre;
+    display: block;
 }
-code {
-    font-family: "et-book", monospace;
+
+pre {
+    width: 65%;
+    margin: 1em 0;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    padding: 0.5em 1em;
+    color: #333;
+    background-color: #f7f7f7;
+    overflow-x: auto;
 }
+
+pre, code {
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 1em;
+    line-height: 1.3;
+}
+
+/* DARK MODE FOR CODE */
+@media (prefers-color-scheme: dark) {
+    pre, code {
+        color: #f7f7f7;
+        background-color: #333;
+        /* border: 1px solid #444; */
+        border: none;
+    }
+}
+
+/* --------- */
+
+
+/* CAREFUL */
+/* ALL OF THIS KINDA WORKS */
+/* /\* Force tighter line spacing like Ginger Bill *\/ */
+/* article p, */
+/* article li, */
+/* article blockquote { */
+/*     line-height: 1.2 !important;   /\* 1.55 is very close to his *\/ */
+/* } */
+
+/* body { */
+/*     max-width: 62em; /\* Ginger Bill's exact feel *\/ */
+/*     margin: 2em auto; */
+/*     padding: 0 1.5em; */
+/*     /\* padding-right: 12%; *\/ */
+/* } */
+/* article { */
+/*     /\* line-height: 1.2; *\/ */
+/*     padding: 0; */
+/*     text-align: justify; */
+/*     text-justify: inter-word; */
+/*     hyphens: auto; */
+/* } */
+/* /\* Optional: don't justify headings or code *\/ */
+/* h1, h2, h3, h4, pre, code { */
+/*     text-align: left; */
+/* } */
+/* /\* Margin notes positioning (Tufte standard) *\/ */
+/* .marginnote, .sidenote { */
+/*     float: right; */
+/*     clear: right; */
+/*     margin-right: -38%; */
+/*     width: 32%; */
+/*     margin-top: 0.4em; */
+/*     /\* font-size: 0.95rem; *\/ */
+/*     font-size: 1.11rem; */
+/* } */
+/* Code blocks */
+/* pre { */
+/*     background-color: #f5f5f5; */
+/*     color: #333; */
+/*     white-space: pre-wrap; */
+/*     max-width: 300em; */
+/*     padding: 1.25em 1.5em; */
+/*     border-radius: 6px; */
+/*     overflow-x: auto; */
+/*     font-size: 0.95rem; */
+/* } */
+/* code { */
+/*     font-family: "et-book", monospace; */
+/* } */

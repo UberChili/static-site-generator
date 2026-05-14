@@ -6,14 +6,19 @@
     <meta name="author" content="{{author}}">
 
     <link rel="stylesheet" href="static/tufte.css"/>
-    <link rel="stylesheet" href="static/css/custom.css"/>
+    <!-- <link rel="stylesheet" href="static/css/custom.css">   <\!-- your tweaks -\-> -->
 </head>
 <body>
     <article>
-        <h1>{{title}}</h1>
-        <p class="subtitle">By {{author}} • {{date}}</p>
+        <header>
+            <h1>{{title}}</h1>
+            <!-- <p class="subtitle">By {{author}} • {{date}}</p> -->
+            <p class="subtitle">{{date}}</p>
+        </header>
 
-        {{content}}
+        <main>
+            {{content}}
+        </main>
 
         <footer>
             <p>Stay Medieval ❤️‍🔥</p>
