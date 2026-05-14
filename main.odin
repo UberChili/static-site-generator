@@ -51,7 +51,6 @@ main :: proc() {
     })
     // Building post list
     post_list := build_post_list(posts_arr[:])
-    // Loading index template
+    // Loading, handling and copying index page
     handle_index(post_list)
-
 }

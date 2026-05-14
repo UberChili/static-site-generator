@@ -20,15 +20,14 @@ I am 32 years old, and a Software Engineer, living in México. I love to play vi
 
 I am interested in:
 
-* Systems Programming, using Rust, C or C++
-* Video games and/or computer graphics programming
-* Backend development
+* Systems Programming, using Rust, Go, Odin, C or C++
+* Video games and video game development
 
 I also like to think and talk about some other stuff, including social and political topics. Some of those topics are: 
 
-* Masculinity and manliness
 * History
 * Christianity
+* Masculinity and manliness
 * Video games
 * Movies
 * Literature
@@ -50,17 +49,25 @@ Looking for a Software Engineer? Please check out [my resume page](/resume/)
 <figcaption>The Apostle Saint Andrew, the first called.</figcaption>
 </span>
 
-
 I don't really use this nickname a lot, or at least do not refer to myself as Ándros, but I still like it, and decided to use it for my website.
-Through my life, I've used many internet nicknames, but I've never been completely happy with most of them. For my previous website I wanted something a little more *serious*. Although this is a little ironic as now in this current site I use my real name. I still like to explain why Ándros though.
+Through my life, I've used many internet nicknames, but I've never been completely happy with any of them. For my previous website I wanted something a little more *serious*. Although this is a little ironic as now in this current site I use my real name. I still like to explain why Ándros though.
 
 Look, I know no greek, so I could be messing some of this stuff, alright? Correct me if I'm wrong.
 
-The thing is, I have two names, one of them is Andrés, or Andrew, which is Άνδρος, (ancient greek for Ándros).
+The thing is, I have two names (kinda common in México), one of them is Andrés, or Andrew, which is Άνδρος, (ancient greek for Ándros).
 
 Ándros, Andrew, Andrés, Andreas, etc.... is a proper masculine name of greek origin, it means **man** just like that; as the opposite of a woman. While *human* could be referred to as άνθρωπος, ánthropos, ανθρώπου, anthrópou.
 
 The meaning of Ándros in greek could be understood as *a man with an incredible power*, manly, brave, virile, strong, and a warrior.
+
+<div class="epigraph">
+<blockquote>
+  <p>Endure, and keep yourselves for days of happiness.</p>
+  <footer>
+    Virgil
+  </footer>
+</blockquote>
+</div>
 
 I believe I am none of theese things. But I strive to become them one day, and remembering the meaning of my own name empowers me, inspires me, and gives me strenght.
 

@@ -432,3 +432,87 @@ article {
 Except this didn't fully work. Every time I tried something new, something else was missing or janky. I ended up, with even further assistance of all Grok, ChatGPT and Claude, with a **custom.css** that looked considerably different than the one shown above. I'll omit showing it fully again as I think it would not be that interesting for the purposes of this post/devblog. The important thing to keep in mind here is, I used a custom.css to fine tune some elements in how the theme looks.
 
 Done. And I'm starting to feel very happy with the results!
+
+## Conclusion of part 4
+That was ANNOYING. Of course I'm not a front-end developer.
+Seriously now, all this messing with Tufte's (and my custom) CSS held me back more or less an entire day. I think I am happy with how the site looks currently so I'll just try to move on and focus on what's left for the project, like for example, getting an actual index page.
+
+# Part 5: Index Page
+An index page's purpose is to give us a quick glance into the posts of our website and some basic information about ourselves. So it should include the site's name, maybe the author's name, and a series of posts, ranging from around five to ten, or more, depending on the author.
+
+For this, we need to get a list of our posts such that we can display them at the front page. Preferably, sorted.
+
+Sorting the posts is somewhat trivial. We need to use a struct to keep track of very basic information of each post, like their name and url. Currently I decided to use something like the following:
+
+```odin
+Post :: struct {
+    title: string,
+    date: string,
+    url: string,
+}
+```
+
+Along with a couple new procedures:
+```odin
+slugify :: proc(original: string) -> string {
+    lowered, _ := strings.to_lower(original, context.temp_allocator)
+    no_spaces, _ := strings.replace_all(lowered, " ", "-", context.temp_allocator)
+    no_underscores, _ := strings.replace_all(no_spaces, "_", "-", context.temp_allocator)
+    return no_underscores
+}
+
+build_post_list :: proc(posts: []Post) -> string {
+    b := strings.builder_make(context.temp_allocator)
+
+    for post in posts {
+        fmt.sbprintf(&b, `<li><a href="%s">%s</a> <span class="byline">%s</span></li>`, 
+             post.url, post.title, post.date)
+    }
+
+    return strings.to_string(b)
+}
+```
+
+And a few additions in main:
+```odin
+    // Sorting Posts
+    slice.sort_by(posts_arr[:], proc(a, b: Post) -> bool {
+        return a.date > b.date
+    })
+    // Building post list
+    post_list := build_post_list(posts_arr[:])
+    // Loading, handling and copying index page
+    handle_index(post_list)
+```
+
+As we can see, we use **slugify** to get better named filenames.
+In main, we use a little trick, using the **sort_by** Odin procedure to sort our slice of posts. Which we also got from **handle_file**. A small addition was needed in this procedure, which I will omit for brevity, but it is important to mention that that procedure's signature changed to the following:
+
+```odin
+handle_file :: proc(filename: os.File_Info, directory: string, array: ^[dynamic]Post) {}
+```
+
+This is because we now need to append to our dynamic array of **Post** objects that stores our posts.
+
+Then, we use **handle_index**, which does some of the job that **handle_file** does, except we only need to grab an HTML template, replace some of its contents, and write it out to the public directory. As we're not dealing with Markdown whatsoever, we can omit a lot of work, so creating a new procedure seemed like a cleaner approach:
+```odin
+handle_index :: proc(posts: string) {
+    template := string(read_file("templates/index.html"))
+
+    html, _ := strings.replace_all(template, "{{post_list}}", posts, context.temp_allocator)
+
+    fmt.printfln("[Writing] %s into public/", "index.html")
+
+    write_err := os.write_entire_file_from_string("public/index.html", html)
+    if write_err != nil {
+        fmt.eprintln("Error when writing to file:", "index.html")
+        return
+    }
+}
+```
+
+By this point, after reading a number of these procedures, there's a chance you might have noticed something:
+
+I'm being somewhat sloppy with the error handling.
+
+I have to admit this is lazy work. But in my defense, I can say that this is first and foremost a personal project and for personal use.
