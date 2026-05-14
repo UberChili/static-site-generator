@@ -1,5 +1,6 @@
 package main
 
+import "core:strings"
 import "core:fmt"
 import "core:os"
 
@@ -43,4 +44,11 @@ directory_exists_or_create :: proc(cwd: string, subdir: string) -> string {
         }
     }
     return directory
+}
+
+slugify :: proc(original: string) -> string {
+    lowered, _ := strings.to_lower(original, context.temp_allocator)
+    no_spaces, _ := strings.replace_all(lowered, " ", "-", context.temp_allocator)
+    no_underscores, _ := strings.replace_all(no_spaces, "_", "-", context.temp_allocator)
+    return no_underscores
 }

@@ -13,6 +13,12 @@ Frontmatter :: struct {
     date: string,
 }
 
+Post :: struct {
+    title: string,
+    date: string,
+    url: string,
+}
+
 // Parses the frontmatter/archetype
 parse_frontmatter :: proc(filename: os.File_Info, data: []byte) -> (Frontmatter, string) {
     text := string(data)
@@ -47,7 +53,7 @@ parse_frontmatter :: proc(filename: os.File_Info, data: []byte) -> (Frontmatter,
 }
 
 // Reads a file, parses to html and writes to disk
-handle_file :: proc(filename: os.File_Info, directory: string) {
+handle_file :: proc(filename: os.File_Info, directory: string, array: ^[dynamic]Post) {
     // Sanity checks
     if !os.exists(filename.fullpath) {
         fmt.eprintfln("File %v does not exist. Ignoring...", filename.fullpath)
@@ -66,12 +72,20 @@ handle_file :: proc(filename: os.File_Info, directory: string) {
     }
     defer delete(md_filename)
 
-    only_filename := strings.trim_suffix(md_filename[len(md_filename) - 1], ".md")
+    only_filename := slugify(strings.trim_suffix(md_filename[len(md_filename) - 1], ".md"))
 
     new_file := fmt.tprintf("%s%s.html", directory, only_filename)
 
     // Getting frontmatter and data without frontmatter
     frontmatter, data_without_frontmatter := parse_frontmatter(filename, read_file(filename.fullpath))
+
+    // Filling Post struct and appending to array
+    slug := fmt.tprintf("%s.html", only_filename)
+    post := Post{
+        title = frontmatter.title,
+        date = frontmatter.date,
+        url = fmt.tprintf("%s.html", only_filename)}
+    append(array, post)
 
     // Reading file and parsing markdown
     fmt.printfln("[Parsing] %s into %s", filename.fullpath, new_file)

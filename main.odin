@@ -12,6 +12,10 @@ main :: proc() {
     }
     defer delete(cwd, context.temp_allocator)
 
+    // Posts dynamic array
+    posts_arr := [dynamic]Post{}
+    defer delete(posts_arr)
+
     // Ensure required directories exist, or create
     posts := directory_exists_or_create(cwd, "/posts/")
     public := directory_exists_or_create(cwd, "/public/")
@@ -37,6 +41,11 @@ main :: proc() {
 
     // Write simple HTML files to public directory
     for file in files {
-        handle_file(file, public)
+        handle_file(file, public, &posts_arr)
+    }
+
+    // Printing just for testing
+    for post in posts_arr {
+        fmt.println(post.url)
     }
 }

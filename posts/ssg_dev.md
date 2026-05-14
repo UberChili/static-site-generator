@@ -399,8 +399,8 @@ It seems to work out of the box! Except we need to add some configurations to be
 This is following Tufte's convention with a little aid by Grok (I'm not very fluent in HTML).
 
 Key changes:
-- Wrapped everything in **<article>** (Tufte's main container)
-- Removed the **<main>** wrapper
+- Wrapped everything in **article** (Tufte's main container)
+- Removed the **main** wrapper
 - Added a **.subtitle** class for the author/date line
 
 I also added a custom css file to fine tune some things, also using Grok because fuck CSS:
