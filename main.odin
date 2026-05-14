@@ -49,7 +49,9 @@ main :: proc() {
     slice.sort_by(posts_arr[:], proc(a, b: Post) -> bool {
         return a.date > b.date
     })
-    for post in posts_arr {
-        fmt.println(post.url)
-    }
+    // Building post list
+    post_list := build_post_list(posts_arr[:])
+    // Loading index template
+    handle_index(post_list)
+
 }

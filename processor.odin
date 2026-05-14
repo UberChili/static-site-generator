@@ -128,3 +128,28 @@ apply_template :: proc(template: string, frontmatter: Frontmatter, body: string)
 
     return html
 }
+
+handle_index :: proc(posts: string) {
+    template := string(read_file("templates/index.html"))
+
+    html, _ := strings.replace_all(template, "{{post_list}}", posts, context.temp_allocator)
+
+    fmt.printfln("[Writing] %s into public/", "index.html")
+
+    write_err := os.write_entire_file_from_string("public/index.html", html)
+    if write_err != nil {
+        fmt.eprintln("Error when writing to file:", "index.html")
+        return
+    }
+}
+
+build_post_list :: proc(posts: []Post) -> string {
+    b := strings.builder_make(context.temp_allocator)
+
+    for post in posts {
+        fmt.sbprintf(&b, `<li><a href="%s">%s</a> <span class="byline">%s</span></li>`, 
+             post.url, post.title, post.date)
+    }
+
+    return strings.to_string(b)
+}
