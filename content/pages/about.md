@@ -3,6 +3,7 @@
     "title": "About",
     "author": "Andres",
     "date": "2025-12-30",
+    "type": "page",
 }
 ---
 <!-- --- -->
@@ -39,12 +40,7 @@ I also like to think and talk about some other stuff, including social and polit
 Looking for a Software Engineer? Please check out [my resume page](/resume/)
 
 ## Why Άνδρος (Ándros)?
-<!-- <img src="/images/SaintAndrewbyJusepedeRibera.jpg" align="right" width=250 height=350/> -->
 
-<!-- <img src="/images/standrew.jpg" align="right" width=250 height=350/> -->
-
-I don't really use this nickname a lot, or at least do not refer to myself as Ándros, but I still like it, and decided to use it for my website.
-Through my life, I've used many internet nicknames, but I've never been completely happy with any of them. For my previous website I wanted something a little more *serious*. Although this is a little ironic as now in this current site I use my real name. I still like to explain why Ándros though.
 <p>
 <label for="mn-image-demo" class="margin-toggle">&#8853;</label>
 <input type="checkbox" id="mn-image-demo" class="margin-toggle"/>
@@ -53,6 +49,9 @@ Through my life, I've used many internet nicknames, but I've never been complete
     Saint Andrew, the Apostle: The First-Called. 
 </span>
 </p>
+
+I don't really use this nickname a lot, or at least do not refer to myself as Ándros, but I still like it, and decided to use it for my website.
+Through my life, I've used many internet nicknames, but I've never been completely happy with any of them. For my previous website I wanted something a little more *serious*. Although this is a little ironic as now in this current site I use my real name. I still like to explain why Ándros though.
 
 Look, I know no greek, so I could be messing some of this stuff, alright? Correct me if I'm wrong.
 

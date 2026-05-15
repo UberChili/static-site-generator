@@ -19,18 +19,35 @@ read_file :: proc(filename: string) -> []byte {
     return data
 }
 
-get_md_files :: proc(path: string) -> []os.File_Info {
+get_md_files :: proc(path: string, files_da: ^[dynamic]os.File_Info) {
     if !os.exists(path) {
-        fmt.eprintfln("Path doesn't exist", path)
-        return nil
+        fmt.eprintfln("Path doesn't exist:", path)
+        return 
     }
 
-    files, err := os.read_directory_by_path(path, 0, context.temp_allocator)
-    if err != nil {
-        fmt.eprintln("Error reading files from path", path, "with error:", err)
-        return nil
+    /* files, err := os.read_directory_by_path(path, 0, context.temp_allocator) */
+    /* if err != nil { */
+    /*     fmt.eprintln("Error reading files from path", path, "with error:", err) */
+    /*     return nil */
+    /* } */
+    /* return files */
+
+    // Need to change this to us some form of walk
+    // Because we now have subdirectories in the main "content" directory
+    w := os.walker_create(path)
+    defer os.walker_destroy(&w)
+
+    for info in os.walker_walk(&w) {
+        if info.type == .Regular && strings.ends_with(info.name, ".md"){
+            // Clone the fileinfo so it survives after walker is destroyed
+            cloned, err := os.file_info_clone(info, context.temp_allocator)
+            if err != nil {
+                fmt.eprintfln("Error cloning file %#v", info)
+                return
+            }
+            append(files_da, cloned)
+        }
     }
-    return files
 }
 
 directory_exists_or_create :: proc(cwd: string, subdir: string) -> string {

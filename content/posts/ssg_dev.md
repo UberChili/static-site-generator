@@ -3,6 +3,7 @@
     "title": "Building a static site generator",
     "author": "Andres",
     "date": "2026-05-06",
+    "type": "post",
 }
 ---
 
@@ -440,6 +441,7 @@ Seriously now, all this messing with Tufte's (and my custom) CSS held me back mo
 # Part 5: Index Page
 An index page's purpose is to give us a quick glance into the posts of our website and some basic information about ourselves. So it should include the site's name, maybe the author's name, and a series of posts, ranging from around five to ten, or more, depending on the author.
 
+## Getting a list of posts and sorting them
 For this, we need to get a list of our posts such that we can display them at the front page. Preferably, sorted.
 
 Sorting the posts is somewhat trivial. We need to use a struct to keep track of very basic information of each post, like their name and url. Currently I decided to use something like the following:
@@ -494,6 +496,7 @@ handle_file :: proc(filename: os.File_Info, directory: string, array: ^[dynamic]
 
 This is because we now need to append to our dynamic array of **Post** objects that stores our posts.
 
+## Writing the list to a nice index page
 Then, we use **handle_index**, which does some of the job that **handle_file** does, except we only need to grab an HTML template, replace some of its contents, and write it out to the public directory. As we're not dealing with Markdown whatsoever, we can omit a lot of work, so creating a new procedure seemed like a cleaner approach:
 ```odin
 handle_index :: proc(posts: string) {
@@ -511,8 +514,146 @@ handle_index :: proc(posts: string) {
 }
 ```
 
+Along with our new base template for index.html:
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{Title}}</title>
+    <link rel="stylesheet" href="static/tufte.css">
+    <link rel="stylesheet" href="static/css/custom.css">
+</head>
+<body>
+    <article>
+        <h1>Heading</h1>
+
+        <h2>Articles</h2>
+        
+        <ul>
+            {{post_list}}
+        </ul>
+
+        <footer>
+            Something
+        </footer>
+    </article>
+</body>
+</html>
+```
+
+It is very similar to our base template, simple and minimalistic. The magic is just done, like in the parsing of the other templates, when we replace the **{{post_list}}** placeholder with our list of posts.
+a **string builder** is very useful for this. And indeed we use it in a new process called **build_post_list** as is shown next:
+```odin
+build_post_list :: proc(posts: []Post) -> string {
+    b := strings.builder_make(context.temp_allocator)
+
+    for post in posts {
+        fmt.sbprintf(&b, `<li><a href="%s">%s</a> <span class="byline">%s</span></li>`, 
+             post.url, post.title, post.date)
+    }
+
+    return strings.to_string(b)
+}
+```
+
+We pretty much iterate over our slice of posts, get the info we need, and insert all the information into their respective placeholders and then return all of it as a single string.
+
 By this point, after reading a number of these procedures, there's a chance you might have noticed something:
 
 I'm being somewhat sloppy with the error handling.
 
-I have to admit this is lazy work. But in my defense, I can say that this is first and foremost a personal project and for personal use.
+I have to admit this is lazy work. But in my defense, I can say that this is first and foremost a personal project and for personal use. I am still trying to use at least some forms of error handling and trying to be careful here and there, but there's a number of places where I'm taking shortcuts. Again, this project is mainly for my personal use so we can just move on. If this ever becomes more serious, we can always work on improving all around it.
+
+## Conclusion of Part 5 and current state of the project
+This part was quite fun and I was somewhat excited to get to it. Forming an array/slice of our posts and sorting them in order to display them in a nice, clean list in our index was a nice learning experience as it combines or reinforces many elements we've been dealing with through this project: Parsing our Markdown files to HTML, rendering the HTML and replacing some values while applying some logic to it. I think the current state of the project is... almost finished! This version might be 1.0 as, for my needs, I can totally see myself starting to use this for my personal website. Of course, there are some missing features here and there, but the results speak for themselves. This is usable.
+
+Still, I'll try to not abandon this project here and polish it at least a little more. I have many ideas about what the following parts will be about. So, let's check out the consecutive parts.
+
+# Part 6: A different organization for files
+Currently, we are just reading an arbitrary **"posts"** directory, getting all **.md** files, parsing them, and spitting them as HTML to the **public** directory. Good enough for now. But we could use with a little more organization. All the entries in our site are _content_, but... at the very least, and trying to stay minimal, we can split this content into two _categories_: **posts** and **pages**.
+
+## Posts
+This is pretty much what we've been dealing with for the entire project up until this point and the chunk of the content of the site.
+We can think of a _post_ as a synonim of an _article_ or a _blog entry_. An update, something the author wants to share to the world.
+
+Again, we've been dealing with posts correctly until now. We have a working frontmatter and all. We loop through the **posts** directory and parse all **.md** files. Simple. Those content files (the _posts_) are what will be shown in the **index** page in all their glory. No significant changes here.
+
+## Pages
+I think o a page, as something less creative and expressive, but more as more "static" content. Something that holds important information and can easily be seen. Think about a **resume** page or an **about** page. (Both of which, yeah, I plan to use and currently use in my current personal website).
+
+So, in order to support pages, I thought first, like I mentioned at the start of this part, to at least split the directory structure; simply into a **content** directory, inside which, we now have two subdirectories: **posts** and **pages**. This requires some modifications to the **get_md_files** procedure, since before we were getting a list of a directory's contents by using Odin's builtin procedure **os.read_directory_by_path()**, which returns a **[]os.File_Info**, which works well enough. But now we need something a little more robust, as we're dealing with subdirectories.
+
+This is better solved by using **walkers** as shown in the modified **get_md_files** procedure:
+```odin
+get_md_files :: proc(path: string, files_da: ^[dynamic]os.File_Info) {
+    if !os.exists(path) {
+        fmt.eprintfln("Path doesn't exist:", path)
+        return 
+    }
+
+    w := os.walker_create(path)
+    defer os.walker_destroy(&w)
+
+    for info in os.walker_walk(&w) {
+        if info.type == .Regular && strings.ends_with(info.name, ".md"){
+            // Clone the fileinfo so it survives after walker is destroyed
+            cloned, err := os.file_info_clone(info, context.temp_allocator)
+            if err != nil {
+                fmt.eprintfln("Error cloning file %#v", info)
+                return
+            }
+            append(files_da, cloned)
+        }
+    }
+}
+```
+
+We now pass a pointer to a dynamic array in which we will store our posts. We pass a pointer of the dynamic array, instead of having the procedure return a dynamic array, because this way it is easier to clean up the memory from the caller, in this case, **main**:
+```odin
+    // Getting files from content directory
+    files := [dynamic]os.File_Info{}
+    defer delete(files)
+    get_md_files(content, &files)
+```
+
+Now, we need to "filter out" the content that _should not_ be included in the index. Stuff like a **resume** page or an **about** page. This can easily be solved by adding a new field to our frontmatters:
+```odin
+Frontmatter :: struct {
+    title: string,
+    author: string,
+    date: string,
+    type: string
+}
+```
+
+And, for example, this is how the frontmatter looks for this same post:
+```json
+{
+    "title": "Building a static site generator",
+    "author": "Andres",
+    "date": "2026-05-06",
+    "type": "post",
+}
+```
+
+Keeping it simple for now.
+This could also be solved by checking the subfolder name but I think having it in the frontmatter is more descriptive. I could be wrong but I'll keep it like this for now.
+
+And for this to work, we need to make yet another modification to the **handle_file** procedure. Just a simple check to decide whether to include a given file into the **posts_arr** that we return to use to form the **index** posts list.
+```odin
+    // Filling Post struct and appending to array, only if current file is a post
+    if frontmatter.type == "post" {
+        slug := fmt.tprintf("%s.html", only_filename)
+        post := Post{
+            title = frontmatter.title,
+            date = frontmatter.date,
+            url = fmt.tprintf("%s.html", only_filename)}
+        append(array, post)
+    }
+```
+
+And done. This cleanly "filters out" all content that is not normal _posts_ to be shown in the index page!
+
+## Conclusion of Part 6
+Another fun part to implement. Just a matter of adding a little more information to the frontmatters, directory and subdirectories structure, and some logic. This is shaping up nicely.

@@ -18,11 +18,11 @@ main :: proc() {
     defer delete(posts_arr)
 
     // Ensure required directories exist, or create
-    posts := directory_exists_or_create(cwd, "/posts/")
+    content := directory_exists_or_create(cwd, "/content/")
     public := directory_exists_or_create(cwd, "/public/")
     public_static := directory_exists_or_create(cwd, "/public/static")
     static := directory_exists_or_create(cwd, "/static/")
-    if public == "" || posts == "" || static == ""{
+    if public == "" || content == "" || static == ""{
         os.exit(1)
     }
 
@@ -33,12 +33,13 @@ main :: proc() {
         os.exit(1)
     }
 
-    // Getting files from posts directory
-    files := get_md_files(posts)
+    // Getting files from content directory
+    files := [dynamic]os.File_Info{}
+    defer delete(files)
+    get_md_files(content, &files)
     if files == nil {
         os.exit(1)
     }
-    defer delete(files, context.temp_allocator)
 
     // Write simple HTML files to public directory
     for file in files {

@@ -11,6 +11,7 @@ Frontmatter :: struct {
     title: string,
     author: string,
     date: string,
+    type: string
 }
 
 Post :: struct {
@@ -79,13 +80,15 @@ handle_file :: proc(filename: os.File_Info, directory: string, array: ^[dynamic]
     // Getting frontmatter and data without frontmatter
     frontmatter, data_without_frontmatter := parse_frontmatter(filename, read_file(filename.fullpath))
 
-    // Filling Post struct and appending to array
-    slug := fmt.tprintf("%s.html", only_filename)
-    post := Post{
-        title = frontmatter.title,
-        date = frontmatter.date,
-        url = fmt.tprintf("%s.html", only_filename)}
-    append(array, post)
+    // Filling Post struct and appending to array, only if current file is a post
+    if frontmatter.type == "post" {
+        slug := fmt.tprintf("%s.html", only_filename)
+        post := Post{
+            title = frontmatter.title,
+            date = frontmatter.date,
+            url = fmt.tprintf("%s.html", only_filename)}
+        append(array, post)
+    }
 
     // Reading file and parsing markdown
     fmt.printfln("[Parsing] %s into %s", filename.fullpath, new_file)
