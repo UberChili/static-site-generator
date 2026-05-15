@@ -10,6 +10,53 @@ article {
     text-align: justify;
 }
 
+/* Stuff to reduce the huge margin at top */
+body {
+    margin-top: 1.5em;        /* Much tighter than Tufte's default */
+    padding-top: 0;
+}
+
+article {
+    padding-top: 0;
+    margin-top: 0;
+}
+
+h1 {
+    margin-top: 0.2em;        /* Reduce space above the main title */
+}
+
+/* Stuff for the navigation bar */
+/* Simple Navigation */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 2em 0 1.5em 0;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 3em;
+    font-family: inherit;           /* ensures ET Book */
+}
+
+.nav-logo {
+    font-size: 1.6rem;
+    font-weight: normal;
+    text-decoration: none;
+    letter-spacing: -0.02em;
+}
+
+.nav-links a {
+    margin-left: 2.2em;
+    text-decoration: none;
+    font-size: 1.05rem;
+    opacity: 0.75;
+    transition: opacity 0.2s;
+}
+
+.nav-links a:hover {
+    opacity: 1;
+}
+
+
 /* Oh my God this also worked */
 /* BODY POSITION */
 /* body { */
