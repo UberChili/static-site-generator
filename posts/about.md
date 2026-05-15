@@ -46,7 +46,7 @@ Looking for a Software Engineer? Please check out [my resume page](/resume/)
 <input type="checkbox" id="mn-image-demo" class="margin-toggle"/>
 <span class="marginnote">
 <img src="static/images/standrew.jpg" alt="Saint Andrew">
-<figcaption>The Apostle Saint Andrew, the first called.</figcaption>
+<figcaption>The Apostle Saint Andrew, the first called. He was great. And yeah, I choosed to show him here because, well, because he's called Andrew. Of course.</figcaption>
 </span>
 
 I don't really use this nickname a lot, or at least do not refer to myself as Ándros, but I still like it, and decided to use it for my website.
