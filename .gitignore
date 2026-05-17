@@ -4,5 +4,3 @@ static-site-generator
 SSG
 ssg.sublime-workspace
 ssg.sublime-project
-templates/base.bak.html
-templates/base_working.bak.html
