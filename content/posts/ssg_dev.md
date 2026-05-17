@@ -657,3 +657,34 @@ And done. This cleanly "filters out" all content that is not normal _posts_ to b
 
 ## Conclusion of Part 6
 Another fun part to implement. Just a matter of adding a little more information to the frontmatters, directory and subdirectories structure, and some logic. This is shaping up nicely.
+
+# Part 7: Wrapping up, conclusions of the project, and future ideas
+After several days (and a fair amount of frustration with CSS), I now have a working static site generator written from scratch in Odin.
+It can:
+
+- Parse Markdown files with JSON frontmatter
+- Generate clean HTML using the beautiful Tufte CSS
+- Distinguish between posts and static pages
+- Generate a simple homepage with a sorted list of posts
+- Produce clean URLs 
+- Copy static assets automatically
+
+It's minimal, fast, and does exactly what I need for my personal website. No bloat, no unnecessary features that I will likely never use, and I understand every line of it.
+
+This project started as a way to practice **The Odin Programming Language** and start building my own tools, thanks to the inspiration of programmers like **Ginger Bill** and **Jonathan Blow**, and maybe to escape the "complexity" (because I'm not sure if I should call it that) of Go's Hugo. In that sense, it has been a success. I learned a lot about file handling, string manipulation, some memory management, (even though I mostly used with temp_allocator), and even a bit about CSS (though I still hate it).
+
+## Current limitations and future ideas
+Even though I’m calling this v1.0, there are still some things I might want to add later:
+
+- A proper CLI with basic commands to actually initialize a site or add content
+- A proper archive / tags system
+- Better error messages and/or overall error handling robustness
+- RSS feed generation
+- Maybe a very small built-in template engine
+
+But for now, it’s good enough. I can start writing real content with it.
+
+## Final thoughts
+Building your own tools is incredibly satisfying. Even if it’s not as feature-complete as Hugo, and even if I question my own programming skills all through the development of the project, the fact that I made it makes it feel more personal and fun to use, and might very likely encourage me to actually feed or update my website more regularly.
+
+If you’re reading this on the final site — that means we made it! It was built with itself.
