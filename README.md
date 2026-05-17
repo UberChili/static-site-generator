@@ -2,7 +2,7 @@
 
 A small, fast, and personal static site generator written in **Odin**.
 
-Built because I got tired of Hugo's complexity and wanted something I fully understand and control. And also because I wanted to write some Odin.
+Built because I wanted something smaller and simpler than **Hugo**, and something I fully understand and control. And also because I wanted to write some Odin.
 
 ## Features
 
@@ -35,7 +35,7 @@ sudo cp static-site-generator /usr/local/bin/ssg
 Now you can run ssg from anywhere.
 
 ## Usage
-The static site generator expects your project to have a **content**, **templates**, and a **static** directories, something like the following:
+For now, you add the content yourself manually. The static site generator expects your project to have a **content**, **templates**, and a **static** directories, something like the following:
 ```bash
 .
 ├── content/           # ← Your writing goes here
