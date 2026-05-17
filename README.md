@@ -17,22 +17,24 @@ Built because I got tired of Hugo's complexity and wanted something I fully unde
 ## Project Structure
 
 ```bash
-content/
-├── posts/
-│   └── my-first-post.md
-└── pages/
-    └── about.md
-
-templates/
-├── base.html
-└── index.html
-
-static/
-├── css/
-└── images/
-
-public/          # ← generated output (add to .gitignore)
+.
+├── main.odin
+├── processor.odin
+├── utils.odin
+├── content/           # ← Your writing goes here
+│   ├── posts/
+│   └── pages/
+├── templates/         # ← Edit these to change appearance
+│   ├── base.html
+│   └── index.html
+├── static/            # ← CSS, fonts, images
+│   ├── css/
+│   └── images/
+└── public/            # ← Generated site (never commit this)
 ```
+
+I left a basic **base.html** and **index.html**, as well as my custom.css with the slight modifications I made to Tufte CSS, as I use them currently as a starting point for you. 
+Be sure to modify them to your liking! 
 
 ## Usage
 1. Build
