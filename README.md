@@ -14,13 +14,30 @@ Built because I got tired of Hugo's complexity and wanted something I fully unde
 - Automatic slug generation (`My Cool Post.md` → `my-cool-post.html`)
 - Clean builds (removes old files)
 
-## Project Structure
+## Installation
+### 1. Compile the binary (recommended)
+```bash
+# Clone the repo
+git clone https://github.com/UberChili/static-site-generator.git
+cd static-site-generator
 
+# Compile with optimizations (fastest binary)
+odin build . -o:speed -o:none
+```
+This will produce an executable called static-site-generator (or ssg if you rename it).
+
+### 2. Install system-wide (optional)
+```bash
+# Make it executable and install to /usr/local/bin
+chmod +x static-site-generator
+sudo cp static-site-generator /usr/local/bin/ssg
+```
+Now you can run ssg from anywhere.
+
+## Usage
+The static site generator expects your project to have a **content**, **templates**, and a **static** directories, something like the following:
 ```bash
 .
-├── main.odin
-├── processor.odin
-├── utils.odin
 ├── content/           # ← Your writing goes here
 │   ├── posts/
 │   └── pages/
@@ -33,27 +50,23 @@ Built because I got tired of Hugo's complexity and wanted something I fully unde
 └── public/            # ← Generated site (never commit this)
 ```
 
-I left a basic **base.html** and **index.html**, as well as my custom.css with the slight modifications I made to Tufte CSS, as I use them currently as a starting point for you. 
-Be sure to modify them to your liking! 
+**Note:** I left a basic **base.html** and **index.html**, as well as my custom.css with the slight modifications I made to Tufte CSS, as I use them currently as a starting point for you. 
 
-## Usage
-1. Build
-```bash
-odin build .
-```
+Be sure to modify them to your liking or replace them completely! 
 
-2. Run
+This is how it knows the current directory is a website. Then you can just do:
 ```bash
-./ssg
+ssg
 ```
+Simple.
 
 This will:
 - Clean the public directory
 - Process all **.md** files in the **content/** directory
-- Generate HTML files + homepage (index.html)
+- Generate **HTML files** + homepage (**index.html**)
 - Copy static assets
 
-3. Add content
+## Adding content
 - Place and edit your posts in **content/posts/**
 - Static pages go in **content/pages/**
 - Use frontmatter with "type": "post" or omit for pages
