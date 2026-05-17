@@ -22,7 +22,7 @@ git clone https://github.com/UberChili/static-site-generator.git
 cd static-site-generator
 
 # Compile with optimizations (fastest binary)
-odin build . -o:speed -o:none
+odin build . -o:speed
 ```
 This will produce an executable called static-site-generator (or ssg if you rename it).
 
@@ -32,7 +32,7 @@ This will produce an executable called static-site-generator (or ssg if you rena
 chmod +x static-site-generator
 sudo cp static-site-generator /usr/local/bin/ssg
 ```
-Now you can run ssg from anywhere.
+Now you can run ssg from anywhere. **But ssg will still expect the directories mentioned in the following section**.
 
 ## Usage
 For now, you add the content yourself manually. The static site generator expects your project to have a **content**, **templates**, and a **static** directories, something like the following:
