@@ -50,7 +50,7 @@ For now, you add the content yourself manually. The static site generator expect
 └── public/            # ← Generated site (never commit this)
 ```
 
-**Note:** I left a basic **base.html** and **index.html**, as well as my custom.css with the slight modifications I made to Tufte CSS, as I use them currently as a starting point for you. 
+**Note:** I left a basic **base.html** and **index.html**, as well as my custom.css with the slight modifications I made to Tufte CSS, as I use them currently, as a starting point for you. 
 
 Be sure to modify them to your liking or replace them completely! 
 
@@ -58,7 +58,6 @@ This is how it knows the current directory is a website. Then you can just do:
 ```bash
 ssg
 ```
-Simple.
 
 This will:
 - Clean the public directory
@@ -83,10 +82,9 @@ Example frontmatter:
 
 ## Limitations
 - Very minimal templating (simple string replacement)
-- No built-in syntax highlighting (yet)
+- No built-in syntax highlighting
 - No watch mode
 - No RSS feed
-- Basic error handling
 - No advanced features (tags, pagination, etc.)
 
 This is intentionally small. It does exactly what I need (for now), and nothing more.
@@ -98,4 +96,4 @@ This is intentionally small. It does exactly what I need (for now), and nothing 
 - RSS support
 
 ## Why I did this
-I wanted to learn Odin while solving a real problem. Hugo is amazing, powerful and fast, but felt like overkill for a personal site like mine. This project taught me a lot about file handling, memory management, keeping things simple, and more importantly... to build my own tools.
+I wanted to learn Odin while solving a real problem. And even better: solving a real problem for myself. Hugo is amazing, powerful and fast, and it is what I was using until I wrote this, but felt like overkill for a personal site like mine. This project taught me a lot about file handling, memory management, keeping things simple, and more importantly... to build my own tools.
