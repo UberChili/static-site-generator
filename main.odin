@@ -17,24 +17,24 @@ main :: proc() {
 	posts_arr := [dynamic]Post{}
 	defer delete(posts_arr)
 
+	// Removing public for a clean build
+	if os.exists("public") {
+		os.remove_all("public")
+	}
+
 	// Ensure required directories exist, or create
-	content := directory_exists_or_create(cwd, "/content/")
-	public := directory_exists_or_create(cwd, "/public/")
-	public_static := directory_exists_or_create(cwd, "/public/static")
-	static := directory_exists_or_create(cwd, "/static/")
-	if public == "" || content == "" || static == "" {
+	content := directory_exists_or_create(cwd, "content")
+	public := directory_exists_or_create(cwd, "public")
+	original_static := directory_exists_or_create(cwd, "static")
+	output_static := directory_exists_or_create(public, "static")
+	if public == "" || content == "" || original_static == "" {
 		os.exit(1)
 	}
-    // Removing public for a clean build
-    if os.exists(public) {
-        os.remove_all(public)
-    }
-	public = directory_exists_or_create(cwd, "/public/")
 
 	// Copy static into public
-	copy_err := os.copy_directory_all(public_static, static)
+	copy_err := os.copy_directory_all(output_static, original_static)
 	if copy_err != nil {
-		fmt.println("Error copying %q to %q", static, public)
+		fmt.println("Error copying %q to %q", original_static, output_static)
 		os.exit(1)
 	}
 
@@ -43,6 +43,7 @@ main :: proc() {
 	defer delete(files)
 	get_md_files(content, &files)
 	if files == nil {
+		fmt.eprintln("No files found to parse in content directory.")
 		os.exit(1)
 	}
 
