@@ -13,6 +13,7 @@ Frontmatter :: struct {
 	author: string,
 	date:   string,
 	type:   string,
+	draft:  string,
 }
 
 Post :: struct {
@@ -91,6 +92,10 @@ handle_file :: proc(filename: os.File_Info, directory: string, array: ^[dynamic]
 			url   = fmt.tprintf("%s.html", only_filename),
 		}
 		append(array, post)
+	}
+
+	if frontmatter.draft == "true" {
+		return
 	}
 
 	// Reading file and parsing markdown
